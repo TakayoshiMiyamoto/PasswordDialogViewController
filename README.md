@@ -26,11 +26,11 @@ or include the PasswordDialogViewController class in your project.
 
 ## Usage
 
-```
+```` objective-c
 #import "PasswordDialogViewController.h"
-```
+````
 
-```
+```` objective-c
 @implementation ViewController
 
 - (IBAction)pressAlertButton:(id)sender {
@@ -56,7 +56,7 @@ or include the PasswordDialogViewController class in your project.
 }
 
 @end
-```
+````
 
 ## License
 

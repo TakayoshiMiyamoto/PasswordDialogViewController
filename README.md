@@ -12,13 +12,13 @@ PasswordDialogViewController is a simple password dialog UIViewController class.
 
 ## Requirements
 
-- iOS7.1
+- iOS7.1+
 
 ## Install
 
 Passworddialogviewcontroller is available on cocoapods.
 
-```
+```ruby
 pod 'PasswordDialogViewController'
 ```
 
@@ -26,11 +26,11 @@ or include the PasswordDialogViewController class in your project.
 
 ## Usage
 
-```` objective-c
+``` objective-c
 #import "PasswordDialogViewController.h"
-````
+```
 
-```` objective-c
+``` objective-c
 @implementation ViewController
 
 - (IBAction)pressAlertButton:(id)sender {
@@ -56,7 +56,7 @@ or include the PasswordDialogViewController class in your project.
 }
 
 @end
-````
+```
 
 ## License
 

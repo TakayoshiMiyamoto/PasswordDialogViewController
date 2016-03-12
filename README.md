@@ -1,33 +1,48 @@
-About
-========
+# PasswordDialogViewController
 
 PasswordDialogViewController is a simple password dialog UIViewController class.
-iOS7 later.
+
+## Screens
 
 ![Normal](https://github.com/TakayoshiMiyamoto/PasswordDialogViewController/blob/master/images/normal.gif)
 ![Switch](https://github.com/TakayoshiMiyamoto/PasswordDialogViewController/blob/master/images/switch.gif)
 
-Usage
-========
+## Requirements
 
-Include the PasswordDialogViewController class in your project.
+- iOS7.1
 
-```` objective-c
+## Install
+
+Passworddialogviewcontroller is available on cocoapods.
+
+```
+pod 'PasswordDialogViewController'
+```
+
+or include the PasswordDialogViewController class in your project.
+
+## Usage
+
+```
 #import "PasswordDialogViewController.h"
-````
+```
 
-```` objective-c
+```
 @implementation ViewController
 
 - (IBAction)pressAlertButton:(id)sender {
-    NSString *password = @"test"; // Master password.
+    // Master password
+    NSString *password = @"test";
 
     PasswordDialogViewController *viewController;
     viewController = [[PasswordDialogViewController alloc] initWithPassword:password];
+
     [viewController setDelegate:self];
+
     [viewController setTitleText:@"Title"];
     [viewController setMessageText:@"This is message.This is message.This is message.This is message.This is message."];
-    [viewController show:^(BOOL isOK) { // callback.
+
+    [viewController show:^(BOOL isOK) {
         if (isOK) {
             NSLog(@"Succeed");
         }
@@ -38,10 +53,9 @@ Include the PasswordDialogViewController class in your project.
 }
 
 @end
-````
+```
 
-License
-========
+## License
 
 This PasswordDialogViewController is released under the MIT License.
 See [LICENSE](/LICENSE) for details.

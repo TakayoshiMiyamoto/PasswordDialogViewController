@@ -1,5 +1,8 @@
 # PasswordDialogViewController
 
+[![CocoaPods](https://img.shields.io/cocoapods/v/PasswordDialogViewController.svg)](https://github.com/TakayoshiMiyamoto/PasswordDialogViewController)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/TakayoshiMiyamoto/PasswordDialogViewController/blob/master/LICENSE)
+
 PasswordDialogViewController is a simple password dialog UIViewController class.
 
 ## Screens
@@ -32,7 +35,7 @@ or include the PasswordDialogViewController class in your project.
 
 - (IBAction)pressAlertButton:(id)sender {
     // Master password
-    NSString *password = @"test";
+    NSString *password = @"password";
 
     PasswordDialogViewController *viewController;
     viewController = [[PasswordDialogViewController alloc] initWithPassword:password];
@@ -40,7 +43,7 @@ or include the PasswordDialogViewController class in your project.
     [viewController setDelegate:self];
 
     [viewController setTitleText:@"Title"];
-    [viewController setMessageText:@"This is message.This is message.This is message.This is message.This is message."];
+    [viewController setMessageText:@"This is message."];
 
     [viewController show:^(BOOL isOK) {
         if (isOK) {

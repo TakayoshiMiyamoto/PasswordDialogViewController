@@ -1,0 +1,14 @@
+PODS:
+  - PasswordDialogViewController (0.0.1)
+
+DEPENDENCIES:
+  - PasswordDialogViewController (from `..`)
+
+EXTERNAL SOURCES:
+  PasswordDialogViewController:
+    :path: ..
+
+SPEC CHECKSUMS:
+  PasswordDialogViewController: 33ba1bf2557a484758a8120946165a8b8287a197
+
+COCOAPODS: 0.35.0

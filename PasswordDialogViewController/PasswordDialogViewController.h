@@ -30,6 +30,8 @@
 - (instancetype)initWithPassword:(NSString *)password;
 - (instancetype)initWithPassword:(NSString *)password useSecureSwitch:(BOOL)useSecureSwitch;
 
+
+- (void)showNoCheck:(void (^)(NSString * pwd))completion delegate:(__weak id)sender;
 - (void)show:(void (^)(BOOL isOK))completion;
 - (void)show:(void (^)(BOOL isOK))completion delegate:(__weak id)sender;
 

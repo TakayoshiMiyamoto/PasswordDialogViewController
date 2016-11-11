@@ -20,10 +20,12 @@ static const NSInteger kTextFieldMargin = 30;
 
 // Completion block
 typedef void (^completion)(BOOL isOK);
+typedef void (^completionNoCheck)(NSString * pwd);
 
 @interface PasswordDialogViewController()<UITextFieldDelegate>
 
 @property (nonatomic, copy) completion completion;
+@property (nonatomic, copy) completionNoCheck completionNoCheck;
 
 @property (nonatomic, strong) UIView *mainView;
 @property (nonatomic, strong) UILabel *titleLabel;
@@ -89,7 +91,10 @@ typedef void (^completion)(BOOL isOK);
     }
     
     _completion = completion;
-    
+    [self showDialog];
+}
+
+-(void) showDialog{
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
     UIViewController *rootViewController = window.rootViewController;
     rootViewController.modalPresentationStyle = UIModalPresentationCurrentContext;
@@ -98,6 +103,13 @@ typedef void (^completion)(BOOL isOK);
         self.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     }
     [((UIViewController *)[self delegate]) presentViewController:self animated:NO completion:nil];
+}
+
+- (void)showNoCheck:(void (^)(NSString * pwd))completion delegate:(__weak id)sender{
+    _delegate = sender;
+    
+    _completionNoCheck = completion;
+    [self showDialog];
 }
 
 - (void)show:(void (^)(BOOL isOK))completion delegate:(__weak id)sender {
@@ -309,17 +321,23 @@ typedef void (^completion)(BOOL isOK);
 }
 
 - (void)pressOKButton:(id)sender {
-    if (![_passwordTextField.text isEqualToString:_masterPassword]) {
-        __weak __typeof__(self) weakSelf = self;
-        [self _notEqualAction:^() {
-            __typeof__(weakSelf) strongSelf = weakSelf;
-            [strongSelf _retypeMessage];
-        }];
-        return;
+    if (_completionNoCheck){
+        _completionNoCheck(self.passwordTextField.text);
     }
-    
-    if (_completion) {
-        _completion(YES);
+
+    if (_masterPassword){
+        if (![_passwordTextField.text isEqualToString:_masterPassword]) {
+            __weak __typeof__(self) weakSelf = self;
+            [self _notEqualAction:^() {
+                __typeof__(weakSelf) strongSelf = weakSelf;
+                [strongSelf _retypeMessage];
+            }];
+            return;
+        }
+        
+        if (_completion) {
+            _completion(YES);
+        }
     }
     [self dismissViewControllerAnimated:NO completion:nil];
 }

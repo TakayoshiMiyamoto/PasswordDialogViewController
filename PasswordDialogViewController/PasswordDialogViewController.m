@@ -41,6 +41,11 @@ typedef void (^completionNoCheck)(NSString * pwd);
     dispatch_once_t _onceToken;
 }
 
+@synthesize cancelColor = _cancelColor;
+@synthesize cancelText = _cancelText;
+@synthesize okText = _okText;
+@synthesize okColor = _okColor;
+
 #pragma mark - Lifecycle
 
 - (instancetype)initWithPassword:(NSString *)password {
@@ -119,6 +124,22 @@ typedef void (^completionNoCheck)(NSString * pwd);
 }
 
 #pragma mark - Private instance methods
+
+-(NSString *)okText{
+   return _okText? _okText : @"OK";
+}
+
+-(NSString *)cancelText{
+    return _cancelText ? _cancelText : @"Cancel";
+}
+
+-(UIColor *)okColor{
+   return  _okColor ? _okColor : [PasswordDialogViewController colorFromHexString:@"#1e56fe" alpha:1];
+}
+
+-(UIColor *) cancelColor{
+  return _cancelColor ? _cancelColor : [PasswordDialogViewController colorFromHexString:@"#1e56fe" alpha:1];
+}
 
 - (void)_initialize {
     CGFloat textFieldWidth = kMainViewWidth - (kTextFieldMargin * 2);
@@ -252,8 +273,8 @@ typedef void (^completionNoCheck)(NSString * pwd);
     UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
     cancelButton.frame = cancelButtonFrame;
     [cancelButton addTarget:self action:@selector(pressCloseButton:) forControlEvents:UIControlEventTouchUpInside];
-    [cancelButton setTitle:NSLocalizedString(@"Cancel", @"Cancel") forState:UIControlStateNormal];
-    [cancelButton setTitleColor:[PasswordDialogViewController colorFromHexString:@"#1e56fe" alpha:1]
+    [cancelButton setTitle:NSLocalizedString(self.cancelText, nil) forState:UIControlStateNormal];
+    [cancelButton setTitleColor:self.cancelColor
                        forState:UIControlStateNormal];
     cancelButton.backgroundColor = [UIColor clearColor];
     [leftView addSubview:cancelButton];
@@ -261,8 +282,8 @@ typedef void (^completionNoCheck)(NSString * pwd);
     UIButton *okButton = [UIButton buttonWithType:UIButtonTypeCustom];
     okButton.frame = okButtonFrame;
     [okButton addTarget:self action:@selector(pressOKButton:) forControlEvents:UIControlEventTouchUpInside];
-    [okButton setTitle:NSLocalizedString(@"OK", @"OK") forState:UIControlStateNormal];
-    [okButton setTitleColor:[PasswordDialogViewController colorFromHexString:@"#1e56fe" alpha:1]
+    [okButton setTitle:NSLocalizedString(self.okText, nil) forState:UIControlStateNormal];
+    [okButton setTitleColor:self.okColor
                    forState:UIControlStateNormal];
     okButton.backgroundColor = [UIColor clearColor];
     [rightView addSubview:okButton];

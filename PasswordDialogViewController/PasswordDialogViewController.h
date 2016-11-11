@@ -16,10 +16,14 @@
 @property (nonatomic, copy) NSString *messageText;
 @property (nonatomic, copy) NSString *retypeMessageText;
 @property (nonatomic, copy) NSString *passwordPlaceholder;
+@property (nonatomic, copy) NSString *cancelText;
+@property (nonatomic, copy) NSString *okText;
 
 // Color
 @property (nonatomic, strong) UIColor *titleTextColor;
 @property (nonatomic, strong) UIColor *messageTextColor;
+@property (nonatomic, strong) UIColor *cancelColor;
+@property (nonatomic, strong) UIColor *okColor;
 @property (nonatomic, strong) UIColor *retypeMessageTextColor;
 @property (nonatomic, strong) UIColor *bkColor;
 

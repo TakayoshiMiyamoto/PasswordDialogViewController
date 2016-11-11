@@ -20,10 +20,12 @@ static const NSInteger kTextFieldMargin = 30;
 
 // Completion block
 typedef void (^completion)(BOOL isOK);
+typedef void (^completionNoCheck)(NSString * pwd);
 
 @interface PasswordDialogViewController()<UITextFieldDelegate>
 
 @property (nonatomic, copy) completion completion;
+@property (nonatomic, copy) completionNoCheck completionNoCheck;
 
 @property (nonatomic, strong) UIView *mainView;
 @property (nonatomic, strong) UILabel *titleLabel;
@@ -38,6 +40,11 @@ typedef void (^completion)(BOOL isOK);
 @implementation PasswordDialogViewController {
     dispatch_once_t _onceToken;
 }
+
+@synthesize cancelColor = _cancelColor;
+@synthesize cancelText = _cancelText;
+@synthesize okText = _okText;
+@synthesize okColor = _okColor;
 
 #pragma mark - Lifecycle
 
@@ -89,7 +96,10 @@ typedef void (^completion)(BOOL isOK);
     }
     
     _completion = completion;
-    
+    [self showDialog];
+}
+
+-(void) showDialog{
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
     UIViewController *rootViewController = window.rootViewController;
     rootViewController.modalPresentationStyle = UIModalPresentationCurrentContext;
@@ -100,6 +110,13 @@ typedef void (^completion)(BOOL isOK);
     [((UIViewController *)[self delegate]) presentViewController:self animated:NO completion:nil];
 }
 
+- (void)showNoCheck:(void (^)(NSString * pwd))completion delegate:(__weak id)sender{
+    _delegate = sender;
+    
+    _completionNoCheck = completion;
+    [self showDialog];
+}
+
 - (void)show:(void (^)(BOOL isOK))completion delegate:(__weak id)sender {
     _delegate = sender;
     
@@ -107,6 +124,22 @@ typedef void (^completion)(BOOL isOK);
 }
 
 #pragma mark - Private instance methods
+
+-(NSString *)okText{
+   return _okText? _okText : @"OK";
+}
+
+-(NSString *)cancelText{
+    return _cancelText ? _cancelText : @"Cancel";
+}
+
+-(UIColor *)okColor{
+   return  _okColor ? _okColor : [PasswordDialogViewController colorFromHexString:@"#1e56fe" alpha:1];
+}
+
+-(UIColor *) cancelColor{
+  return _cancelColor ? _cancelColor : [PasswordDialogViewController colorFromHexString:@"#1e56fe" alpha:1];
+}
 
 - (void)_initialize {
     CGFloat textFieldWidth = kMainViewWidth - (kTextFieldMargin * 2);
@@ -240,8 +273,8 @@ typedef void (^completion)(BOOL isOK);
     UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
     cancelButton.frame = cancelButtonFrame;
     [cancelButton addTarget:self action:@selector(pressCloseButton:) forControlEvents:UIControlEventTouchUpInside];
-    [cancelButton setTitle:NSLocalizedString(@"Cancel", @"Cancel") forState:UIControlStateNormal];
-    [cancelButton setTitleColor:[PasswordDialogViewController colorFromHexString:@"#1e56fe" alpha:1]
+    [cancelButton setTitle:NSLocalizedString(self.cancelText, nil) forState:UIControlStateNormal];
+    [cancelButton setTitleColor:self.cancelColor
                        forState:UIControlStateNormal];
     cancelButton.backgroundColor = [UIColor clearColor];
     [leftView addSubview:cancelButton];
@@ -249,8 +282,8 @@ typedef void (^completion)(BOOL isOK);
     UIButton *okButton = [UIButton buttonWithType:UIButtonTypeCustom];
     okButton.frame = okButtonFrame;
     [okButton addTarget:self action:@selector(pressOKButton:) forControlEvents:UIControlEventTouchUpInside];
-    [okButton setTitle:NSLocalizedString(@"OK", @"OK") forState:UIControlStateNormal];
-    [okButton setTitleColor:[PasswordDialogViewController colorFromHexString:@"#1e56fe" alpha:1]
+    [okButton setTitle:NSLocalizedString(self.okText, nil) forState:UIControlStateNormal];
+    [okButton setTitleColor:self.okColor
                    forState:UIControlStateNormal];
     okButton.backgroundColor = [UIColor clearColor];
     [rightView addSubview:okButton];
@@ -309,17 +342,23 @@ typedef void (^completion)(BOOL isOK);
 }
 
 - (void)pressOKButton:(id)sender {
-    if (![_passwordTextField.text isEqualToString:_masterPassword]) {
-        __weak __typeof__(self) weakSelf = self;
-        [self _notEqualAction:^() {
-            __typeof__(weakSelf) strongSelf = weakSelf;
-            [strongSelf _retypeMessage];
-        }];
-        return;
+    if (_completionNoCheck){
+        _completionNoCheck(self.passwordTextField.text);
     }
-    
-    if (_completion) {
-        _completion(YES);
+
+    if (_masterPassword){
+        if (![_passwordTextField.text isEqualToString:_masterPassword]) {
+            __weak __typeof__(self) weakSelf = self;
+            [self _notEqualAction:^() {
+                __typeof__(weakSelf) strongSelf = weakSelf;
+                [strongSelf _retypeMessage];
+            }];
+            return;
+        }
+        
+        if (_completion) {
+            _completion(YES);
+        }
     }
     [self dismissViewControllerAnimated:NO completion:nil];
 }
